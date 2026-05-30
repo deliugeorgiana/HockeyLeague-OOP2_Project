@@ -3,6 +3,7 @@ public class Player extends Person {
     private int jerseyNumber;
     private int goals;
     private int assists;
+    private String currentTeamId;
 
     public Player(String id, String firstName, String lastName, int age, String position, int jerseyNumber) {
         super(id, firstName, lastName, age);
@@ -13,6 +14,14 @@ public class Player extends Person {
     @Override
     public String getRole() {
         return "Player";
+    }
+
+    public String getCurrentTeamId() {
+        return currentTeamId;
+    }
+
+    public void setCurrentTeamId(String currentTeamId) {
+        this.currentTeamId = currentTeamId;
     }
 
     public String getPosition() {

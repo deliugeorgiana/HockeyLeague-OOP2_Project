@@ -1,8 +1,11 @@
-# Sistem de gestiune a unei ligi de hochei - Etapa I
+# Sistem de gestiune a unei ligi de hochei (Java) — Etapa I + Etapa II
 
-Acest proiect implementeaza cerintele Etapa I in Java, fara dependinte externe.
+Aplicatie Java pentru gestionarea unei ligi de hochei.
 
-## 1) Definirea sistemului
+- **Etapa I**: modelare OOP + operatii in memorie (servicii + colectii).
+- **Etapa II**: persistenta in **PostgreSQL** prin strat **DAO (CRUD + interogari)**. Datele se pastreaza intre rulari.
+
+## Cerinte acoperite
 
 ### Actiuni / interogari disponibile (minim 10)
 1. Creare sezon (`createSeason`)
@@ -33,21 +36,50 @@ Acest proiect implementeaza cerintele Etapa I in Java, fara dependinte externe.
 10. `Contract`
 11. `LeagueService` (clasa serviciu)
 
-## 2) Implementare
+## Arhitectura si implementare
 
-Cerintele sunt acoperite astfel:
-- Clase cu atribute `private` / `protected` + metode de acces in toate entitatile.
-- Cel putin 2 colectii diferite:
-  - `List` / `Set` pentru echipe, persoane si meciuri.
-  - `TreeMap` (sortata) pentru clasament dupa puncte.
+### Domeniu (OOP)
+- Clase cu atribute `private` / `protected` + metode de acces in entitati.
 - Mostenire: `Player`, `Coach`, `Referee` mostenesc `Person`.
-- Clasa serviciu: `LeagueService` expune operatiile sistemului.
-- `Main` ruleaza un scenariu demo complet.
+- Colectii folosite (minim 2 tipuri):
+  - `List` / `Set` pentru echipe, persoane si meciuri.
+  - `TreeMap` pentru clasament sortat dupa puncte.
+- Service layer: `LeagueService`, `TeamService`.
+- `Main` ruleaza un scenariu demo.
+
+### Persistenta (Etapa II)
+- DAO layer (persistenta): `ArenaDAO`, `TeamDAO`, `PlayerDAO`, `CoachDAO`, `RefereeDAO`, `MatchDAO`, `ContractDAO`, `StandingDAO`.
+- Conexiune DB: `DatabaseConnection`.
+- Initializare DB (schema + date default, daca este necesar): `DatabaseInitializer`.
+
+## Baza de date (PostgreSQL)
+- Nume baza de date: `hockey_league`
+- Script schema + seed: `create_database.sql`
+
+Scriptul creeaza tabelele principale (`arena`, `team`, `person`, `player`, `coach`, `referee`, `contract`, `match`, `standing_entry`, etc.) si indexuri pentru performanta.
+
+### Setup (pgAdmin / psql)
+1. Creeaza baza de date `hockey_league`.
+2. Ruleaza scriptul `create_database.sql` conectat pe baza `hockey_league`.
+3. Verifica setarile de conectare din `DatabaseConnection` (host/port/user/parola).
+
+> Recomandare: nu hardcoda parole in README. Ajusteaza local credintele folosite in `DatabaseConnection`.
+
+### Persistenta datelor
+Operatiile din service-uri folosesc DAO-urile pentru a scrie/citi din PostgreSQL. Astfel, entitatile introduse pe parcurs (echipe, jucatori, meciuri, contracte, clasament) raman salvate in baza de date intre rulari.
 
 ## Rulare
 
+### Varianta recomandata: IntelliJ IDEA
+1. Deschide proiectul in IntelliJ.
+2. Adauga in proiect driverul **PostgreSQL JDBC** (library `postgresql-*.jar`).
+3. Ruleaza `Main`.
+
+### Linie de comanda (orientativ)
+Ai nevoie de driverul JDBC PostgreSQL in classpath.
+
 ```bash
-javac src/*.java
-java -cp src Main
+javac -cp "src;path\\to\\postgresql-jdbc.jar" src\\*.java
+java -cp "src;path\\to\\postgresql-jdbc.jar" Main
 ```
 

@@ -44,6 +44,7 @@ public class LeagueService {
     public void addPlayerToTeam(String teamId, Player player, double salary, int durationYears) {
         Team team = findTeamByIdOrThrow(teamId);
         team.addPlayer(player);
+        player.setCurrentTeamId(teamId);
         playersById.put(player.getId(), player);
         registeredPeople.add(player);
         contracts.add(new Contract(player, team, salary, LocalDate.now(), durationYears));
@@ -151,6 +152,7 @@ public class LeagueService {
         }
 
         to.addPlayer(player);
+        player.setCurrentTeamId(toTeamId);
         contracts.removeIf(contract -> contract.getPlayer().getId().equals(playerId));
         contracts.add(new Contract(player, to, newSalary, LocalDate.now(), durationYears));
     }

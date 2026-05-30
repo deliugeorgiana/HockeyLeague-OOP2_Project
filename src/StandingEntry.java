@@ -2,6 +2,7 @@ public class StandingEntry {
     private Team team;
     private int played;
     private int wins;
+    private int draws;
     private int losses;
     private int goalsFor;
     private int goalsAgainst;
@@ -17,9 +18,17 @@ public class StandingEntry {
     public int getPlayed() {
         return played;
     }
+    
+    public int getMatchesPlayed() {
+        return played;
+    }
 
     public int getWins() {
         return wins;
+    }
+
+    public int getDraws() {
+        return draws;
     }
 
     public int getLosses() {
@@ -39,7 +48,32 @@ public class StandingEntry {
     }
 
     public int getPoints() {
-        return wins * 3;
+        return wins * 3 + draws;
+    }
+    
+    // Setters for DAO
+    public void setMatchesPlayed(int played) {
+        this.played = played;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public void setDraws(int draws) {
+        this.draws = draws;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
+    }
+
+    public void setGoalsFor(int goalsFor) {
+        this.goalsFor = goalsFor;
+    }
+
+    public void setGoalsAgainst(int goalsAgainst) {
+        this.goalsAgainst = goalsAgainst;
     }
 
     public void registerGame(int goalsScored, int goalsAllowed) {
@@ -48,6 +82,8 @@ public class StandingEntry {
         goalsAgainst += goalsAllowed;
         if (goalsScored > goalsAllowed) {
             wins++;
+        } else if (goalsScored == goalsAllowed) {
+            draws++;
         } else {
             losses++;
         }
